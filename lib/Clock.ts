@@ -45,7 +45,6 @@ class Clock {
   private timer: any
   private option: Option
   private selectorValid: boolean
-  private visibleHandler: Function
 
   constructor(selector: string, option: Option = {}) {
     this.selectorValid = false
@@ -58,7 +57,6 @@ class Clock {
       type: 'digital',
       ...option
     }
-    this.visibleHandler = () => {}
     this.checkSelector()
     if (!this.selectorValid) return
     this.run()
@@ -82,13 +80,12 @@ class Clock {
   digital(selector: string, option: Option) {
     const el = window.document.querySelector(selector) as HTMLElement
     const time = dayjs.tz(new Date(), option.tz).add(1, 'hour')
-    const year: number[] = String(time.year()).split('').map(v => Number(v))
-    const month: number[] = String(time.month()).padStart(2, '0').split('').map(v => Number(v))
-    const date: number[]= String(time.date()).padStart(2, '0').split('').map(v => Number(v))
-    const hour: number[] = String(time.hour()).padStart(2, '0').split('').map(v => Number(v))
-    const minute: number[] = String(time.minute()).padStart(2, '0').split('').map(v => Number(v))
-    const second: number[] = String(time.second()).padStart(2, '0').split('').map(v => Number(v))
-
+    const year = String(time.year()).split('')
+    const month = String(time.month()).padStart(2, '0').split('')
+    const date = String(time.date()).padStart(2, '0').split('')
+    const hour = String(time.hour()).padStart(2, '0').split('')
+    const minute = String(time.minute()).padStart(2, '0').split('')
+    const second = String(time.second()).padStart(2, '0').split('')
     el.innerHTML = `<span style="margin-left:4px;${option.style}">` +
     `${Icon[year[0]]}${Icon[year[1]]}${Icon[year[2]]}${Icon[year[3]]}-&nbsp;${Icon[month[0]]}${Icon[month[1]]}-&nbsp;` +
     `${Icon[date[0]]}${Icon[date[1]]} ${Icon[hour[0]]}${Icon[hour[1]]}: ` +
@@ -119,19 +116,18 @@ class Clock {
         this.timer = window.setInterval(clock, 1e3)
       }
     }
-    this.visibleHandler = () => {
-      if (window.document.visibilityState === 'visible') action()
-    }
 
     clock()
     action()
-    window.document.addEventListener('visibilitychange', this.visibleHandler())
+    window.document.addEventListener('visibilitychange', () => {
+      if (window.document.visibilityState === 'visible') action()
+      // if (window.document.visibilityState == 'hidden') this.timer && window.clearInterval(this.timer)
+    })
   }
 
   // 销毁
   destroy() {
     window.clearInterval(this.timer)
-    window.document.removeEventListener('visibilitychange', this.visibleHandler())
   }
 }
 
