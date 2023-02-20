@@ -1,3 +1,5 @@
+[English](README.md)  | [中文](README_CN.md)
+
 ## Introduction
 
 > Generate digital clock or dial clock, support time zone, custom style
