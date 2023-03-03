@@ -81,7 +81,7 @@ class Clock {
   // 纯数字时钟
   digital(selector: string, option: Option) {
     const el = window.document.querySelector(selector) as HTMLElement
-    const time = dayjs.tz(new Date(), option.tz).add(1, 'hour')
+    const time = dayjs.tz(dayjs(), option.tz).add(1, 'hour')
     const year: number[] = String(time.year()).split('').map(v => Number(v))
     const month: number[] = String(time.month()).padStart(2, '0').split('').map(v => Number(v))
     const date: number[]= String(time.date()).padStart(2, '0').split('').map(v => Number(v))
